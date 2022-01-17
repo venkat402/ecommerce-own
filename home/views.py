@@ -8,11 +8,34 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from .forms import RegistrationForm, UserProfileForm
+from django.contrib.auth.hashers import make_password
 
 
 # Create your views here.
 def register(request):
-    return render(request, "register.html")
+    if request.method == "POST":
+        data = dict(request.POST)
+        data['password'] = make_password(data['password'][0])
+        reg_form = RegistrationForm(data)
+        pro_form = UserProfileForm(data)
+        if reg_form.is_valid() and pro_form.is_valid():
+            raise Exception(reg_form.password)
+            user = reg_form.save()
+            profile = pro_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            messages.success(request, "User account created successfully")
+            return redirect('signin')
+        else:
+            context = {
+                "form": reg_form,
+                "form2": pro_form
+            }
+            return render(request, 'register.html', context)
+
+    else:
+        return render(request, "register.html")
 
 
 def signin(request):
@@ -80,11 +103,19 @@ def get_store(request):
 
 
 def search(request):
-    name = request.GET['name']
-    products = Product.objects.filter(Q(name__icontains=name) | Q(description__icontains=name))
+    name = request.GET.get('name', '')
+    sizes = request.GET.getlist('sizes[]', '')
+    colors = request.GET.getlist('colors[]', '')
+    min = request.GET.get('min', 0)
+    max = request.GET.get('max', 10 ** 10)
+    products = Product.objects.filter(
+        Q(name__icontains=name) | Q(description__icontains=name) | Q(size__in=sizes) | Q(color__in=colors)).filter(
+        price__range=(min, max))
+
     context = {
         "search": True,
         "products": products,
         "count": products.count()
+
     }
     return render(request, 'store.html', context)

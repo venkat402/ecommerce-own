@@ -29,39 +29,45 @@
 
 
                         <hr>
-                        <div class="row">
-                            <div class="item-option-select">
-                                <h6>Choose Color</h6>
-                                <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-                                    {% for c in colors %}
-                                    <label class="btn btn-light">
-                                        <input type="radio" name="{{c.name}}"> {{c.value}}
-                                    </label>
-                                    {% endfor %}
-                                    <!--                                    <label class="btn btn-light active">-->
-                                    <!--                                        <input type="radio" name="radio_color checked"> Gold-->
-                                    <!--                                    </label>-->
+                        <form method="POST" action="{% url 'add_to_cart' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{product.id}}">
+                            <div class="row">
+                                <div class="item-option-select">
+                                    <h6>Choose Color</h6>
+                                    <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+                                        <fieldset id="color">
+                                            {% for c in colors %}
+                                            <label class="btn btn-light">
+                                                <input type="radio" name="color" value="{{c.key}}"> {{c.value}}
+                                            </label>
+                                            {% endfor %}
+                                        </fieldset>
+                                        <!--                                    <label class="btn btn-light active">-->
+                                        <!--                                        <input type="radio" name="radio_color checked"> Gold-->
+                                        <!--                                    </label>-->
+                                    </div>
                                 </div>
-                            </div>
-                        </div> <!-- row.// -->
-                        <div class="row">
-                            <div class="item-option-select">
-                                <h6>Select Size</h6>
-                                <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-                                    {% for s in sizes %}
-                                    <label class="btn btn-light">
-                                        <input type="radio" name="{{s.value}}"> {{s.key}}
-                                    </label>
-                                    {% endfor %}
-                                    <!--                                    <label class="btn btn-light active">-->
-                                    <!--                                        <input type="radio" name="radio_color" checked> M-->
-                                    <!--                                    </label>-->
+                            </div> <!-- row.// -->
+                            <div class="row">
+                                <div class="item-option-select">
+                                    <h6>Select Size</h6>
+                                    <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+                                        <fieldset id="size">
+                                            {% for s in sizes %}
+                                            <label class="btn btn-light">
+                                                <input type="radio" name="size" value="{{s.key}}"> {{s.key}}
+                                            </label>
+                                            {% endfor %}
+                                        </fieldset>
+                                    </div>
+
                                 </div>
-                            </div>
-                        </div> <!-- row.// -->
-                        <hr>
-                        <a href="#" class="btn  btn-primary"> <span class="text">Add to cart</span>
-                            <i class="fas fa-shopping-cart"></i> </a>
+                            </div> <!-- row.// -->
+                            <hr>
+                            <button type="submit" class="btn  btn-primary"><span class="text">Add to cart</span>
+                                <i class="fas fa-shopping-cart"></i></button>
+                        </form>
                     </article> <!-- product-info-aside .// -->
                 </main> <!-- col.// -->
             </div> <!-- row.// -->
