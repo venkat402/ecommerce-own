@@ -1,18 +1,11 @@
 {% extends "includes/base.html" %}
-
 {% load static %}
 
 {% block body_block %}
-
 <!-- ========================= SECTION PAGETOP ========================= -->
 <section class="section-pagetop bg">
     <div class="container">
-        {% if search %}
-        <p></p>
-        <h2 class="title-page">Search Results : {{request.GET.name}} </h2>
-        {% else %}
-        <h2 class="title-page">Our Store</h2>
-        {% endif %}
+        <h2 class="title-page">Category Products</h2>
     </div> <!-- container //  -->
 </section>
 <!-- ========================= SECTION INTRO END// ========================= -->
@@ -36,8 +29,8 @@
                             <div class="card-body">
 
                                 <ul class="list-menu">
-                                    {% for c in categories %}
-                                    <li><a href="{% url 'get_categories' slug=c.slug %}"> {{c.name}} </a></li>
+                                    {% for cat in categories %}
+                                    <li><a href="{% url 'get_categories' slug=cat.slug %}">{{cat.name}}</a></li>
                                     {% endfor %}
                                 </ul>
 
@@ -55,11 +48,10 @@
                             <div class="card-body">
                                 {% for s in sizes %}
                                 <label class="checkbox-btn">
-                                    <input type="checkbox" value="{{s.key}}">
+                                    <input type="checkbox">
                                     <span class="btn btn-light"> {{s.key}} </span>
                                 </label>
                                 {% endfor %}
-
                             </div><!-- card-body.// -->
                         </div>
                     </article> <!-- filter-group .// -->
@@ -74,11 +66,10 @@
                             <div class="card-body">
                                 {% for c in colors %}
                                 <label class="checkbox-btn">
-                                    <input type="checkbox" value="{{c.key}}">
+                                    <input type="checkbox">
                                     <span class="btn btn-light"> {{c.value}} </span>
                                 </label>
                                 {% endfor %}
-
                             </div><!-- card-body.// -->
                         </div>
                     </article> <!-- filter-group .// -->
@@ -132,7 +123,7 @@
 
                 <header class="border-bottom mb-4 pb-3">
                     <div class="form-inline">
-                        <span class="mr-md-auto"><b>{{count}}</b> Items found </span>
+                        <span class="mr-md-auto"><b>{{count}}</b> Item(s) found </span>
 
                     </div>
                 </header><!-- sect-heading -->
@@ -147,8 +138,7 @@
                     <!--                            </div> &lt;!&ndash; img-wrap.// &ndash;&gt;-->
                     <!--                            <figcaption class="info-wrap">-->
                     <!--                                <div class="fix-height">-->
-                    <!--                                    <a href="{% url 'product_detail' slug='slug' %}" class="title">Great item name goes-->
-                    <!--                                        here</a>-->
+                    <!--                                    <a href="{% url 'product_detail' slug='slug' %}" class="title">Great item name goes here</a>-->
                     <!--                                    <div class="price-wrap mt-2">-->
                     <!--                                        <span class="price">$1280</span>-->
                     <!--                                        <del class="price-old">$1980</del>-->
@@ -162,7 +152,7 @@
                     <div class="col-md-4">
                         <figure class="card card-product-grid">
                             <div class="img-wrap">
-                                <img src="{{MEDIA_URL}}{{p.images}}">
+                                <img src="{{ MEDIA_URL }}{{p.images}}">
 
                             </div> <!-- img-wrap.// -->
                             <figcaption class="info-wrap">
@@ -177,7 +167,6 @@
                         </figure>
                     </div> <!-- col.// -->
                     {% endfor %}
-
                 </div> <!-- row end.// -->
 
 

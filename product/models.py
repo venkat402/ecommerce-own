@@ -22,7 +22,7 @@ class Product(models.Model):
     ]
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    slug = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255, unique=True)
     sku = models.CharField(max_length=25)
     price = models.FloatField(default=None)
     color = models.CharField(max_length=1, choices=colors)
@@ -37,4 +37,4 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __self__(self):
-        return self.name
+        return str(self.name)

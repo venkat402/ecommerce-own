@@ -7,7 +7,7 @@
     <meta http-equiv="cache-control" content="max-age=604800"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>GreatKart | One of the Biggest Online Shopping Platform</title>
+    <title>{{config.site_name}}</title>
 
     <link href="{% static 'images/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
 
@@ -40,15 +40,6 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-
-
-
-
-
     </script>
 
 </head>
@@ -64,17 +55,21 @@ $(document).ready(function() {
             </button>
             <div class="collapse navbar-collapse" id="navbarTop4">
                 <ul class="navbar-nav mr-auto">
+                    {% for k,v in config.languages.items %}
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link"> English </a>
-
+                        <a href="#" class="nav-link"> {{v}} </a>
                     </li>
+                    {% endfor %}
+                    {% for k,v in config.currencies.items %}
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link"> USD </a>
+                        <a href="#" class="nav-link">{{k}}</a>
                     </li>
+                    {% endfor %}
                 </ul>
                 <ul class="navbar-nav">
-                    <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
-                    <li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li>
+                    <li><a href="mailto:{{config.email}}" class="nav-link"> <i class="fa fa-envelope"></i> Email </a>
+                    </li>
+                    <li><a href="tel:{{config.mobile}}" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li>
                 </ul> <!-- list-inline //  -->
             </div> <!-- navbar-collapse .// -->
         </div> <!-- container //  -->
@@ -84,8 +79,9 @@ $(document).ready(function() {
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-2 col-md-3 col-6">
-                    <a href="./" class="brand-wrap">
-                        <img class="logo" src="{% static 'images/logo.png' %}">
+                    <a href="{% url 'index'%}" class="brand-wrap">
+                        <img src="{{MEDIA_URL}}{{config.logo}}" class="img-fluid rounded"
+                             onerror="this.onerror=null;this.src='{% static 'images/logo.png' %}';">
                     </a> <!-- brand-wrap.// -->
                 </div>
                 <div class="col-lg col-sm col-md col-6 flex-grow-0">
@@ -94,20 +90,18 @@ $(document).ready(function() {
                             <i class="fa fa-bars"></i> All category
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Machinery / Mechanical Parts / Tools </a>
-                            <a class="dropdown-item" href="#">Consumer Electronics / Home Appliances </a>
-                            <a class="dropdown-item" href="#">Auto / Transportation</a>
-                            <a class="dropdown-item" href="#">Apparel / Textiles / Timepieces </a>
-                            <a class="dropdown-item" href="#">Home & Garden / Construction / Lights </a>
-                            <a class="dropdown-item" href="#">Beauty & Personal Care / Health </a>
+                            {% for cat in categories %}
+                            <a class="dropdown-item" href="{% url 'get_categories' slug=cat.slug %}">{{cat.name}}</a>
+                            {% endfor %}
                         </div>
                     </div>  <!-- category-wrap.// -->
                 </div> <!-- col.// -->
-                <a href="{% url 'store' %}" class="btn btn-outline-primary">Store</a>
+                <a href="{% url 'get_store' %}" class="btn btn-outline-primary">Store</a>
                 <div class="col-lg  col-md-6 col-sm-12 col">
-                    <form action="#" class="search">
+                    <form action="{% url 'search' %}" class="search">
                         <div class="input-group w-100">
-                            <input type="text" class="form-control" style="width:60%;" placeholder="Search">
+                            <input type="text" name="name" class="form-control" style="width:60%;"
+                                   placeholder="Search">
 
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit">
@@ -120,11 +114,24 @@ $(document).ready(function() {
                 <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
                     <div class="d-flex justify-content-end mb-3 mb-lg-0">
                         <div class="widget-header">
+                            {% if user.is_authenticated %}
+                            {% if user.first_name %}
+                            <small class="title text-muted">Welcome {{user.first_name}}!</small>
+                            {% else %}
+                            <small class="title text-muted">Welcome {{user.username}}!</small>
+                            {% endif %}
+                            <div>
+                                <a href="{% url 'user_logout' %}">Logout</a> <span class="dark-transp"> | </span>
+                                <a href="{% url 'register' %}"> Dashboard</a>
+                            </div>
+
+                            {% else %}
                             <small class="title text-muted">Welcome guest!</small>
                             <div>
                                 <a href="{% url 'signin' %}">Sign in</a> <span class="dark-transp"> | </span>
                                 <a href="{% url 'register' %}"> Register</a>
                             </div>
+                            {% endif %}
                         </div>
                         <a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
                             <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
@@ -135,9 +142,30 @@ $(document).ready(function() {
             </div> <!-- row.// -->
         </div> <!-- container.// -->
     </section> <!-- header-main .// -->
-
-
 </header> <!-- section-header.// -->
+
+{% if messages %}
+<hr class="alert">
+{% for message in messages %}
+<center>
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="width:25%">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</center>
+{% endfor %}
+{% endif %}
+<script>
+$(".alert").fadeTo(7000, 500).slideUp(1000, function(){
+    $(".alert").slideUp(2000);
+});
+
+
+
+
+</script>
 
 {% block body_block %}
 {% endblock %}
@@ -146,12 +174,12 @@ $(document).ready(function() {
     <div class="container">
         <section class="footer-bottom border-top row">
             <div class="col-md-2">
-                <p class="text-muted"> &copy 2019 Company name </p>
+                <p class="text-muted"> &copy {% now "Y" %} {{config.site_name}} </p>
             </div>
             <div class="col-md-8 text-md-center">
-                <span class="px-2">info@pixsellz.io</span>
-                <span class="px-2">+879-332-9375</span>
-                <span class="px-2">Street name 123, Avanue abc</span>
+                <span class="px-2">{{config.email}}</span>
+                <span class="px-2">{{config.mobile}}</span>
+                <span class="px-2">{{config.address | slice:":60"}}</span>
             </div>
             <div class="col-md-2 text-md-right text-muted">
                 <i class="fab fa-lg fa-cc-visa"></i>
