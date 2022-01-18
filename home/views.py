@@ -10,6 +10,27 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, UserProfileForm
 from django.contrib.auth.hashers import make_password
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
+def get_store(request):
+    products = Product.objects.all().order_by('-id')
+
+    p = Paginator(products, 6)
+
+    page_number = request.GET.get('page')
+    try:
+        p_obj = p.page(page_number)
+    except PageNotAnInteger:
+        p_obj = p.page(1)
+    except EmptyPage:
+        p_obj = p.page(p.num_pages)
+    context = {
+        "products": p_obj,
+        "count": p.count
+    }
+
+    return render(request, 'store.html', context)
 
 
 # Create your views here.
@@ -93,15 +114,6 @@ def product_details(request, slug):
     return render(request, "product-detail.html")
 
 
-def get_store(request):
-    products = Product.objects.all().order_by('-id')[:20]
-    context = {
-        "products": products,
-        "count": products.count()
-    }
-    return render(request, 'store.html', context)
-
-
 def search(request):
     name = request.GET.get('name', '')
     sizes = request.GET.getlist('sizes[]', '')
@@ -112,10 +124,19 @@ def search(request):
         Q(name__icontains=name) | Q(description__icontains=name) | Q(size__in=sizes) | Q(color__in=colors)).filter(
         price__range=(min, max))
 
+    p = Paginator(products, 6)
+
+    page_number = request.GET.get('page')
+    try:
+        p_obj = p.page(page_number)
+    except PageNotAnInteger:
+        p_obj = p.page(1)
+    except EmptyPage:
+        p_obj = p.page(p.num_pages)
+
     context = {
         "search": True,
-        "products": products,
-        "count": products.count()
-
+        "products": p_obj,
+        "count": p.count
     }
     return render(request, 'store.html', context)
