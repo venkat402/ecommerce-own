@@ -6,7 +6,11 @@ from .models import Product
 
 
 def product_details(request, slug):
-    product = Product.objects.get(slug=slug)
+    product = None
+    try:
+        product = Product.objects.get(slug=slug)
+    except Exception:
+        pass
     context = {
         'product': product
     }

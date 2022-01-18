@@ -75,7 +75,78 @@
         <!-- ============================ COMPONENT 1 END .// ================================= -->
 
         <br>
+        <style>
+    .rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: left
+}
 
+.rating>input {
+    display: none
+}
+
+.rating>label {
+    position: relative;
+    width: 1em;
+    font-size: 20px;
+    color: #FFD600;
+    cursor: pointer
+}
+
+.rating>label::before {
+    content: "\2605";
+    position: absolute;
+    opacity: 0
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before {
+    opacity: 1 !important
+}
+
+.rating>input:checked~label:before {
+    opacity: 1
+}
+
+.rating:hover>input:checked~label:before {
+    opacity: 0.4
+}
+
+}
+
+
+
+
+
+
+
+        </style>
+        {% if user.is_authenticated %}
+        <form action="{% url 'submit_review' %}" method="POST">
+            {% csrf_token %}
+            <b>Rating </b>
+            <input type="hidden" name="product_id" value="{{product.id}}">
+            <div class="rating"><input type="radio" name="ratting" value="5" id="5"><label for="5">☆</label> <input
+                    type="radio" name="ratting" value="4" id="4"><label for="4">☆</label> <input type="radio"
+                                                                                                name="ratting" value="3"
+                                                                                                id="3"><label
+                    for="3">☆</label> <input type="radio" name="ratting" value="2" id="2"><label for="2">☆</label> <input
+                    type="radio" name="ratting" value="1" id="1"><label for="1">☆</label>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Subject</label>
+                <input type="text" name="subject" class="form-control" id="exampleFormControlInput1"
+                       placeholder="subject">
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Write review</label>
+                <textarea name="body" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn  btn-primary"><span class="text">Submit Review</span>
+            </button>
+        </form>
+        {% endif %}
 
         <div class="row">
             <div class="col-md-9">

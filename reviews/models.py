@@ -18,3 +18,6 @@ class Review(models.Model):
 
     def __str__(self):
         return self.user.email
+
+    class Meta:
+        unique_together = ('user', 'product')
