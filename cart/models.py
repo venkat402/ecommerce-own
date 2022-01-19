@@ -17,8 +17,8 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    cart = models.ManyToManyField(Cart, related_name="cartitems")
+    product = models.ManyToManyField(Product)
     color = models.CharField(max_length=255, default='')
     size = models.CharField(max_length=255, default='')
     quantity = models.IntegerField(default=1)

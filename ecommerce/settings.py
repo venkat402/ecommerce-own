@@ -138,6 +138,9 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STRIPE_PUBLISHABLE_KEY = 'test_publishable_key'
+STRIPE_SECRET_KEY = 'test_secret_key'
+
 if DEBUG:
     INTERNAL_IPS = ('127.0.0.1', 'localhost',)
     MIDDLEWARE += (

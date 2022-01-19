@@ -35,19 +35,24 @@
                             </td>
                             <td>
                                 <!-- col.// -->
-                                <div class="col">
-                                    <div class="input-group input-spinner">
-                                        <div class="input-group-prepend">
-                                            <button class="btn btn-light" type="button" id="button-plus"><i
-                                                    class="fa fa-minus"></i></button>
-                                        </div>
-                                        <input type="text" class="form-control" value="{{i.quantity}}">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-light" type="button" id="button-minus"><i
-                                                    class="fa fa-plus"></i></button>
-                                        </div>
-                                    </div> <!-- input-group.// -->
-                                </div> <!-- col.// -->
+                                <form method="POST" action="{% url 'update_cart' %}">
+                                    {% csrf_token %}
+                                    <div class="col">
+                                        <div class="input-group input-spinner">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-light" type="submit" id="button-plus"><i
+                                                        class="fa fa-minus"></i></button>
+                                            </div>
+                                            <input type="hidden" name="cart_id" , value="{{i.id}}">
+                                            <input type="text" class="form-control" name="quantity"
+                                                   value="{{i.quantity}}">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-light" type="submit" id="button-minus"><i
+                                                        class="fa fa-plus"></i></button>
+                                            </div>
+                                        </div> <!-- input-group.// -->
+                                    </div> <!-- col.// -->
+                                </form>
                             </td>
                             <td>
                                 <div class="price-wrap">
@@ -85,7 +90,7 @@
                         <p class="text-center mb-3">
                             <img src="{% static 'images/misc/payments.png' %}" height="26">
                         </p>
-                        <a href="{% url 'place_order' %}" class="btn btn-primary btn-block"> Checkout </a>
+                        <a href="{% url 'checkout' %}" class="btn btn-primary btn-block"> Checkout </a>
                         <a href="{% url 'get_store' %}" class="btn btn-light btn-block">Continue Shopping</a>
                     </div> <!-- card-body.// -->
                 </div> <!-- card.// -->

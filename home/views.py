@@ -11,6 +11,23 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, UserProfileForm
 from django.contrib.auth.hashers import make_password
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from orders.models import Order
+from django.db.models import Prefetch
+from cart.models import Cart
+
+
+def user_dashboard(request):
+    user = request.user
+    orders = Order.objects.select_related('user').select_related('cart').select_related('payment').select_related(
+        'cart__cartitems').filter(
+        user=user)
+    print(orders)
+    raise Exception(orders[0].cart.__dict__)
+    print(orders.__dict__)
+    context = {
+        "orders": orders
+    }
+    return render(request, 'dashboard.html', context)
 
 
 def get_store(request):
