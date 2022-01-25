@@ -18,7 +18,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ManyToManyField(Cart, related_name="cartitems")
-    product = models.ManyToManyField(Product)
+    product = models.ManyToManyField(Product, related_name='products')
     color = models.CharField(max_length=255, default='')
     size = models.CharField(max_length=255, default='')
     quantity = models.IntegerField(default=1)
